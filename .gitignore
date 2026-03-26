@@ -1,0 +1,138 @@
+############################
+# 🔐 ENV & SECRETS
+############################
+.env
+.env.*
+*.env
+
+backend/.env
+frontend/.env
+
+# API keys / secrets
+secrets/
+keys/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+############################
+# 🧠 PYTHON (BACKEND)
+############################
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+venv/
+.envrc
+.python-version
+
+# FastAPI / logs
+*.log
+
+############################
+# 🟢 NODE / FRONTEND
+############################
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# Vite
+.vite/
+
+############################
+# 🧱 DATABASE
+############################
+*.sqlite3
+*.db
+*.sql
+
+# Postgres dumps
+*.dump
+
+############################
+# 🐳 DOCKER
+############################
+docker-data/
+postgres_data/
+
+############################
+# 🧪 TESTING / CACHE
+############################
+.pytest_cache/
+coverage/
+*.coverage
+
+############################
+# 💻 IDE / OS
+############################
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+.idea/
+
+############################
+# 📦 BUILD FILES
+############################
+*.tar
+*.gz
+*.zip
+
+############################
+# 🔒 PRIVATE BUSINESS LOGIC
+############################
+# 🚨 
+# Hide proprietary logic
+
+backend/app/private/
+backend/app/internal/
+backend/app/proprietary/
+
+# Example: sensitive algorithms
+backend/app/services/secret_engine.py
+backend/app/services/risk_model.py
+
+# Example: internal APIs
+backend/app/api/internal/
+
+############################
+# 🔐 PARTIAL FILE PROTECTION (IMPORTANT)
+############################
+# If a file has both public + private logic,
+# move private parts to:
+# backend/app/private/
+
+############################
+# 📁 OPTIONAL: PRIVATE FRONTEND LOGIC
+############################
+frontend/src/private/
+frontend/src/internal/
+
+############################
+# 📊 EXPORTS / REPORTS
+############################
+exports/
+reports/
+uploads/
+
+############################
+# 🔑 TOKENS / AUTH FILES
+############################
+token.json
+auth.json
+credentials.json
+
+############################
+# 🚫 DO NOT IGNORE THESE
+############################
+!README.md
+!docker-compose.yml
+!.gitignore
