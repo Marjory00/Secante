@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine # type: ignore
-from sqlalchemy.orm import sessionmaker # type: ignore
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = "postgresql://secante:secante123@localhost:5432/secante_db"
 

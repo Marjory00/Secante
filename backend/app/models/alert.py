@@ -1,5 +1,5 @@
-from sqlalchemy import Column, DateTime, Integer, String, Text # type: ignore
-from sqlalchemy.sql import func # type: ignore
+from sqlalchemy import Column, DateTime, Integer, String, Text
+from sqlalchemy.sql import func
 from app.db.base import Base
 
 class Alert(Base):
