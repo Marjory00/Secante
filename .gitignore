@@ -136,3 +136,7 @@ credentials.json
 !README.md
 !docker-compose.yml
 !.gitignore
+
+#####################
+README-FIRST.md/
+README-FIRST.md
