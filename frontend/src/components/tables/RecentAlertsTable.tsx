@@ -1,7 +1,21 @@
-import { alerts } from "../../data/mockData";
+import type { AlertItem } from "../../types/auth";
+import EmptyState from "../ui/EmptyState";
 import StatusBadge from "../ui/StatusBadge";
 
-export default function RecentAlertsTable() {
+interface RecentAlertsTableProps {
+  alerts: AlertItem[];
+}
+
+export default function RecentAlertsTable({ alerts }: RecentAlertsTableProps) {
+  if (!alerts.length) {
+    return (
+      <EmptyState
+        title="No alerts found"
+        message="There are no recent alerts to display right now."
+      />
+    );
+  }
+
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10">
       <div className="overflow-x-auto">

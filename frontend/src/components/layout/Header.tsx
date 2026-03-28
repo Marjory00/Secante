@@ -1,6 +1,15 @@
-import { Bell, Search, Shield } from "lucide-react";
+import { Bell, LogOut, Search, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../services/authService";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    logoutUser();
+    navigate("/login", { replace: true });
+  }
+
   return (
     <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
       <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
@@ -24,12 +33,17 @@ export default function Header() {
             />
           </label>
 
-         <button
-  aria-label="Open notifications"
-  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
->
-  <Bell className="h-5 w-5 text-slate-200" />
-</button>
+          <button className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10">
+            <Bell className="h-5 w-5 text-slate-200" />
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-white/10"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
         </div>
       </div>
     </header>

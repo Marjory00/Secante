@@ -1,11 +1,27 @@
 import { Activity, ArrowUpRight, ShieldAlert, Video } from "lucide-react";
-import { cameras, metrics } from "../data/mockData";
+import { metrics } from "../data/mockData";
+import { useAlerts } from "../hooks/useAlerts";
+import { useCameras } from "../hooks/useCameras";
 import RecentAlertsTable from "../components/tables/RecentAlertsTable";
 import PanelCard from "../components/ui/PanelCard";
 import StatCard from "../components/ui/StatCard";
 import StatusBadge from "../components/ui/StatusBadge";
+import LoadingState from "../components/ui/LoadingState";
+import EmptyState from "../components/ui/EmptyState";
 
 export default function DashboardPage() {
+  const {
+    alerts,
+    loading: alertsLoading,
+    error: alertsError
+  } = useAlerts();
+
+  const {
+    cameras,
+    loading: camerasLoading,
+    error: camerasError
+  } = useCameras();
+
   return (
     <div className="space-y-6">
       <section className="rounded-[28px] border border-white/10 bg-linear-to-br from-blue-600/20 via-slate-900/40 to-slate-900/50 p-6 shadow-2xl shadow-blue-950/20">
@@ -52,7 +68,13 @@ export default function DashboardPage() {
             </div>
           }
         >
-          <RecentAlertsTable />
+          {alertsLoading ? (
+            <LoadingState label="Loading alerts..." />
+          ) : alertsError ? (
+            <EmptyState title="Alerts unavailable" message={alertsError} />
+          ) : (
+            <RecentAlertsTable alerts={alerts} />
+          )}
         </PanelCard>
 
         <PanelCard
@@ -61,27 +83,38 @@ export default function DashboardPage() {
           action={
             <div className="inline-flex items-center gap-2 text-sm text-slate-400">
               <Video className="h-4 w-4" />
-              48 total feeds
+              {cameras.length} feeds
             </div>
           }
         >
-          <div className="space-y-3">
-            {cameras.map((camera) => (
-              <div
-                key={camera.id}
-                className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-950/30 p-4"
-              >
-                <div>
-                  <p className="font-medium text-white">{camera.name}</p>
-                  <p className="text-sm text-slate-400">{camera.location}</p>
+          {camerasLoading ? (
+            <LoadingState label="Loading cameras..." />
+          ) : camerasError ? (
+            <EmptyState title="Cameras unavailable" message={camerasError} />
+          ) : !cameras.length ? (
+            <EmptyState
+              title="No cameras found"
+              message="No cameras are currently available."
+            />
+          ) : (
+            <div className="space-y-3">
+              {cameras.map((camera) => (
+                <div
+                  key={camera.id}
+                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-950/30 p-4"
+                >
+                  <div>
+                    <p className="font-medium text-white">{camera.name}</p>
+                    <p className="text-sm text-slate-400">{camera.location}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Activity className="h-4 w-4 text-blue-400" />
+                    <StatusBadge value={camera.status} />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Activity className="h-4 w-4 text-blue-400" />
-                  <StatusBadge value={camera.status} />
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </PanelCard>
       </section>
     </div>
