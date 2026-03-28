@@ -1,3 +1,4 @@
+import heroImage from "../assets/hero.png";
 import type { AlertItem, CameraItem, MetricItem } from "../types/auth";
 
 export const metrics: MetricItem[] = [
@@ -85,6 +86,7 @@ export const cameras: CameraItem[] = [
     location: "Main Entrance",
     status: "online",
     streamLabel: "Live Stream 01",
+    image: heroImage,
   },
   {
     id: 2,
@@ -92,6 +94,7 @@ export const cameras: CameraItem[] = [
     location: "Parking Lot A",
     status: "online",
     streamLabel: "Live Stream 02",
+    image: heroImage,
   },
   {
     id: 3,
@@ -99,6 +102,7 @@ export const cameras: CameraItem[] = [
     location: "Warehouse Aisle 3",
     status: "offline",
     streamLabel: "Signal Lost",
+    image: heroImage,
   },
   {
     id: 4,
@@ -106,6 +110,7 @@ export const cameras: CameraItem[] = [
     location: "Reception Desk",
     status: "maintenance",
     streamLabel: "Maintenance Mode",
+    image: heroImage,
   },
   {
     id: 5,
@@ -113,6 +118,7 @@ export const cameras: CameraItem[] = [
     location: "North Gate",
     status: "online",
     streamLabel: "Live Stream 05",
+    image: heroImage,
   },
   {
     id: 6,
@@ -120,6 +126,7 @@ export const cameras: CameraItem[] = [
     location: "Loading Dock",
     status: "degraded",
     streamLabel: "Intermittent Signal",
+    image: heroImage,
   },
   {
     id: 7,
@@ -127,6 +134,7 @@ export const cameras: CameraItem[] = [
     location: "Operations Corridor",
     status: "online",
     streamLabel: "Live Stream 07",
+    image: heroImage,
   },
   {
     id: 8,
@@ -134,5 +142,6 @@ export const cameras: CameraItem[] = [
     location: "South Perimeter",
     status: "offline",
     streamLabel: "No Connectivity",
+    image: heroImage,
   },
 ];
