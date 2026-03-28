@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import type { AlertItem } from "../../types/auth";
 import EmptyState from "../ui/EmptyState";
 import StatusBadge from "../ui/StatusBadge";
@@ -6,7 +7,9 @@ interface RecentAlertsTableProps {
   alerts: AlertItem[];
 }
 
-export default function RecentAlertsTable({ alerts }: RecentAlertsTableProps) {
+export default function RecentAlertsTable({
+  alerts,
+}: RecentAlertsTableProps) {
   if (!alerts.length) {
     return (
       <EmptyState
@@ -17,38 +20,81 @@ export default function RecentAlertsTable({ alerts }: RecentAlertsTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10">
+    <section className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/40 shadow-[0_20px_80px_rgba(15,23,42,0.35)]">
+      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/60 px-5 py-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+            Incident feed
+          </p>
+          <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-white">
+            Recent Alerts
+          </h3>
+        </div>
+
+        <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-300">
+          <TriangleAlert className="h-3.5 w-3.5" />
+          {alerts.length} active items
+        </div>
+      </div>
+
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-white/10">
-          <thead className="bg-white/5">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <table className="min-w-full">
+          <thead className="bg-slate-900/40">
+            <tr className="border-b border-slate-800">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Alert
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Location
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Time
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Severity
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Status
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10 bg-slate-950/20">
-            {alerts.map((alert) => (
-              <tr key={alert.id} className="hover:bg-white/3">
-                <td className="px-4 py-4 text-sm font-medium text-white">{alert.title}</td>
-                <td className="px-4 py-4 text-sm text-slate-300">{alert.location}</td>
-                <td className="px-4 py-4 text-sm text-slate-400">{alert.time}</td>
-                <td className="px-4 py-4 text-sm">
+
+          <tbody className="divide-y divide-slate-800/80">
+            {alerts.map((alert, index) => (
+              <tr
+                key={alert.id}
+                className="group bg-slate-950/20 transition hover:bg-slate-900/50"
+              >
+                <td className="px-5 py-4">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl border border-red-500/15 bg-red-500/10">
+                      <TriangleAlert className="h-4.5 w-4.5 text-red-300" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {alert.title}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Alert ID: {alert.id} • Event #{index + 1}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+
+                <td className="px-5 py-4 text-sm text-slate-300">
+                  {alert.location}
+                </td>
+
+                <td className="px-5 py-4 text-sm text-slate-400">
+                  {alert.time}
+                </td>
+
+                <td className="px-5 py-4 text-sm">
                   <StatusBadge value={alert.severity} severity={alert.severity} />
                 </td>
-                <td className="px-4 py-4 text-sm">
+
+                <td className="px-5 py-4 text-sm">
                   <StatusBadge value={alert.status} />
                 </td>
               </tr>
@@ -56,6 +102,6 @@ export default function RecentAlertsTable({ alerts }: RecentAlertsTableProps) {
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
   );
 }
