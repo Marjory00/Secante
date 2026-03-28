@@ -1,9 +1,20 @@
-function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h1 className="text-3xl font-bold">Secante Control Panel</h1>
-    </div>
-  )
-}
+import { Navigate, Route, Routes } from "react-router-dom";
+import AppShell from "./components/layout/AppShell";
+import DashboardPage from "./pages/DashboardPage";
+import CamerasPage from "./pages/CamerasPage";
+import AlertsPage from "./pages/AlertsPage";
+import SettingsPage from "./pages/SettingsPage";
 
-export default App
+export default function App() {
+  return (
+    <AppShell>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/cameras" element={<CamerasPage />} />
+        <Route path="/alerts" element={<AlertsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AppShell>
+  );
+}
