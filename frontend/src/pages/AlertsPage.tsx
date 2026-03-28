@@ -1,0 +1,45 @@
+import { alerts } from "../data/mockData";
+import PanelCard from "../components/ui/PanelCard";
+import StatusBadge from "../components/ui/StatusBadge";
+
+export default function AlertsPage() {
+  return (
+    <div className="space-y-6">
+      <PanelCard
+        title="Alert Queue"
+        subtitle="Prioritized system events and incident review"
+      >
+        <div className="space-y-4">
+          {alerts.map((alert) => (
+            <div
+              key={alert.id}
+              className="rounded-3xl border border-white/10 bg-slate-950/30 p-5"
+            >
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg font-semibold text-white">{alert.title}</h3>
+                    <StatusBadge value={alert.severity} severity={alert.severity} />
+                    <StatusBadge value={alert.status} />
+                  </div>
+                  <p className="mt-2 text-sm text-slate-400">
+                    {alert.location} • {alert.time} • Alert ID #{alert.id}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <button className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
+                    Acknowledge
+                  </button>
+                  <button className="rounded-2xl bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-400">
+                    Open incident
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PanelCard>
+    </div>
+  );
+}
