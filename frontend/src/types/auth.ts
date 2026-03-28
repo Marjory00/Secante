@@ -1,3 +1,6 @@
+/* =========================
+   ALERT TYPES
+========================= */
 export type AlertSeverity = "critical" | "high" | "medium" | "low";
 
 export type AlertStatus =
@@ -6,16 +9,22 @@ export type AlertStatus =
   | "investigating"
   | "resolved";
 
+/* =========================
+   CAMERA TYPES
+========================= */
 export type CameraStatus =
   | "online"
   | "offline"
   | "maintenance"
   | "degraded";
 
+/* =========================
+   METRIC TYPES
+========================= */
 export type MetricTrend = "up" | "down" | "neutral";
 
 /* =========================
-   ALERTS
+   ALERT MODEL
 ========================= */
 export interface AlertItem {
   id: number;
@@ -27,7 +36,7 @@ export interface AlertItem {
 }
 
 /* =========================
-   CAMERAS (FIXED)
+   CAMERA MODEL (FINAL FIX)
 ========================= */
 export interface CameraItem {
   id: number;
@@ -36,12 +45,20 @@ export interface CameraItem {
   status: CameraStatus;
   streamLabel: string;
 
-  /* 🔥 REQUIRED for mock UI */
+  /**
+   * Optional from backend
+   * Required in frontend (we inject fallback)
+   */
   image: string;
+
+  /* Optional future-ready fields */
+  lastSeen?: string;
+  fps?: number;
+  resolution?: string;
 }
 
 /* =========================
-   METRICS
+   METRIC MODEL
 ========================= */
 export interface MetricItem {
   label: string;
@@ -49,3 +66,15 @@ export interface MetricItem {
   helper: string;
   trend?: MetricTrend;
 }
+
+/* =========================
+   API SAFE TYPES (IMPORTANT)
+========================= */
+
+/**
+ * Backend camera response (NO image)
+ * This prevents TypeScript errors when calling API
+ */
+export type ApiCameraItem = Omit<CameraItem, "image"> & {
+  image?: string;
+};
