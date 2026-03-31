@@ -14,7 +14,7 @@ type AppShellProps = {
 };
 
 const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/cameras", label: "Cameras", icon: Camera },
   { to: "/alerts", label: "Alerts", icon: Bell },
   { to: "/settings", label: "Settings", icon: Settings },
@@ -35,9 +35,7 @@ export default function AppShell({ children }: AppShellProps) {
                 <h1 className="truncate text-2xl font-bold tracking-tight text-white">
                   Secante
                 </h1>
-                <p className="text-sm text-slate-400">
-                  Security Control Panel
-                </p>
+                <p className="text-sm text-slate-400">Security Control Panel</p>
               </div>
             </div>
 
@@ -64,6 +62,7 @@ export default function AppShell({ children }: AppShellProps) {
                 <NavLink
                   key={item.to}
                   to={item.to}
+                  end={item.end}
                   className={({ isActive }) =>
                     [
                       "group flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-medium transition-all duration-200",
@@ -95,25 +94,11 @@ export default function AppShell({ children }: AppShellProps) {
         </aside>
 
         <main className="min-w-0 flex-1">
-          <header className="border-b border-slate-800/80 bg-slate-950/70 px-6 py-5 backdrop-blur-xl lg:px-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="min-w-0">
-                <p className="text-xs uppercase tracking-[0.22em] text-blue-400">
-                  Development Environment
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                  Real-time Monitoring Workspace
-                </h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  Login removed for local testing and interface development
-                </p>
-              </div>
-
-              <div className="inline-flex w-fit items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300">
-                System Online
-              </div>
+          <div className="flex items-center justify-end border-b border-slate-800/80 bg-slate-950/70 px-6 py-4 backdrop-blur-xl lg:px-8">
+            <div className="inline-flex w-fit items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300">
+              System Online
             </div>
-          </header>
+          </div>
 
           <div className="p-6 lg:p-8">{children}</div>
         </main>
