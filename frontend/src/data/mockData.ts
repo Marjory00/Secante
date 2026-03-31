@@ -1,6 +1,7 @@
 import heroImage from "../assets/hero.png";
 import type { AlertItem, CameraItem, MetricItem } from "../types/auth";
 
+// METRICS
 export const metrics: MetricItem[] = [
   {
     label: "Active Alerts",
@@ -28,6 +29,7 @@ export const metrics: MetricItem[] = [
   },
 ];
 
+// ALERTS
 export const alerts: AlertItem[] = [
   {
     id: 1001,
@@ -79,6 +81,7 @@ export const alerts: AlertItem[] = [
   },
 ];
 
+// CAMERAS
 export const cameras: CameraItem[] = [
   {
     id: 1,

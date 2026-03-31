@@ -10,7 +10,7 @@ interface RecentAlertsTableProps {
 export default function RecentAlertsTable({
   alerts,
 }: RecentAlertsTableProps) {
-  if (!alerts.length) {
+  if (!alerts?.length) {
     return (
       <EmptyState
         title="No alerts found"
@@ -21,39 +21,39 @@ export default function RecentAlertsTable({
 
   return (
     <section className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/40 shadow-[0_20px_80px_rgba(15,23,42,0.35)]">
-      <div className="flex items-center justify-between border-b border-slate-800 bg-slate-900/60 px-5 py-4">
-        <div>
+      <div className="flex flex-col gap-3 border-b border-slate-800 bg-slate-900/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
             Incident feed
           </p>
-          <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-white">
+          <h3 className="mt-1 text-lg font-semibold tracking-tight text-white">
             Recent Alerts
           </h3>
         </div>
 
-        <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-300">
-          <TriangleAlert className="h-3.5 w-3.5" />
-          {alerts.length} active items
+        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-300">
+          <TriangleAlert className="h-3.5 w-3.5 shrink-0" />
+          <span>{alerts.length} active items</span>
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full">
+        <table className="min-w-full text-left">
           <thead className="bg-slate-900/40">
             <tr className="border-b border-slate-800">
-              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <th className="min-w-[240px] px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Alert
               </th>
-              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <th className="min-w-[160px] px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Location
               </th>
-              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <th className="min-w-[140px] px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Time
               </th>
-              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <th className="min-w-[130px] px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Severity
               </th>
-              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <th className="min-w-[130px] px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
                 Status
               </th>
             </tr>
@@ -65,13 +65,13 @@ export default function RecentAlertsTable({
                 key={alert.id}
                 className="group bg-slate-950/20 transition hover:bg-slate-900/50"
               >
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 align-top">
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl border border-red-500/15 bg-red-500/10">
-                      <TriangleAlert className="h-4.5 w-4.5 text-red-300" />
+                    <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-red-500/15 bg-red-500/10">
+                      <TriangleAlert className="h-4 w-4 text-red-300" />
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-semibold text-white">
                         {alert.title}
                       </p>
@@ -82,19 +82,22 @@ export default function RecentAlertsTable({
                   </div>
                 </td>
 
-                <td className="px-5 py-4 text-sm text-slate-300">
+                <td className="px-5 py-4 align-top text-sm text-slate-300">
                   {alert.location}
                 </td>
 
-                <td className="px-5 py-4 text-sm text-slate-400">
+                <td className="whitespace-nowrap px-5 py-4 align-top text-sm text-slate-400">
                   {alert.time}
                 </td>
 
-                <td className="px-5 py-4 text-sm">
-                  <StatusBadge value={alert.severity} severity={alert.severity} />
+                <td className="px-5 py-4 align-top text-sm">
+                  <StatusBadge
+                    value={alert.severity}
+                    severity={alert.severity}
+                  />
                 </td>
 
-                <td className="px-5 py-4 text-sm">
+                <td className="px-5 py-4 align-top text-sm">
                   <StatusBadge value={alert.status} />
                 </td>
               </tr>

@@ -23,16 +23,16 @@ const navItems = [
 export default function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-white antialiased">
-      <div className="flex min-h-screen">
-        <aside className="w-72 border-r border-slate-800/80 bg-slate-900/80 backdrop-blur-xl">
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        <aside className="w-full border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-xl lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r">
           <div className="border-b border-slate-800/80 px-6 py-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-600/10 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-blue-500/20 bg-blue-600/10 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
                 <Shield className="h-6 w-6 text-blue-400" />
               </div>
 
-              <div>
-                <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+              <div className="min-w-0">
+                <h1 className="truncate text-2xl font-bold tracking-tight text-white">
                   Secante
                 </h1>
                 <p className="text-sm text-slate-400">
@@ -43,7 +43,7 @@ export default function AppShell({ children }: AppShellProps) {
 
             <div className="mt-5 rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                     Platform
                   </p>
@@ -51,12 +51,12 @@ export default function AppShell({ children }: AppShellProps) {
                     Monitor sites, alerts, and camera health in one place
                   </p>
                 </div>
-                <Activity className="mt-0.5 h-5 w-5 text-emerald-400" />
+                <Activity className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
               </div>
             </div>
           </div>
 
-          <nav className="space-y-2 p-4">
+          <nav className="grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-1">
             {navItems.map((item) => {
               const Icon = item.icon;
 
@@ -73,28 +73,35 @@ export default function AppShell({ children }: AppShellProps) {
                     ].join(" ")
                   }
                 >
-                  <span
-                    className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
-                      "group-hover:bg-slate-700/70"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span>{item.label}</span>
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={[
+                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition",
+                          isActive
+                            ? "bg-white/10"
+                            : "bg-slate-800/40 group-hover:bg-slate-700/70",
+                        ].join(" ")}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span className="truncate">{item.label}</span>
+                    </>
+                  )}
                 </NavLink>
               );
             })}
           </nav>
         </aside>
 
-        <main className="flex-1">
-          <header className="border-b border-slate-800/80 bg-slate-950/70 px-8 py-5 backdrop-blur-xl">
-            <div className="flex items-center justify-between gap-4">
-              <div>
+        <main className="min-w-0 flex-1">
+          <header className="border-b border-slate-800/80 bg-slate-950/70 px-6 py-5 backdrop-blur-xl lg:px-8">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="min-w-0">
                 <p className="text-xs uppercase tracking-[0.22em] text-blue-400">
                   Development Environment
                 </p>
-                <h2 className="font-display mt-1 text-3xl font-semibold tracking-tight text-white">
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                   Real-time Monitoring Workspace
                 </h2>
                 <p className="mt-1 text-sm text-slate-400">
@@ -102,13 +109,13 @@ export default function AppShell({ children }: AppShellProps) {
                 </p>
               </div>
 
-              <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300">
+              <div className="inline-flex w-fit items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300">
                 System Online
               </div>
             </div>
           </header>
 
-          <div className="p-8">{children}</div>
+          <div className="p-6 lg:p-8">{children}</div>
         </main>
       </div>
     </div>

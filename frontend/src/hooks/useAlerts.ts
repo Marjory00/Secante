@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchAlerts } from "../services/alertService";
 import type { AlertItem } from "../types/auth";
 
@@ -11,27 +11,44 @@ interface UseAlertsResult {
 
 export function useAlerts(): UseAlertsResult {
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const isMountedRef = useRef(true);
+
   const refetch = useCallback(async (): Promise<void> => {
-    try {
+    if (isMountedRef.current) {
       setLoading(true);
       setError(null);
+    }
 
+    try {
       const data = await fetchAlerts();
-      setAlerts(data);
+
+      if (!isMountedRef.current) return;
+
+      setAlerts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to load alerts:", err);
-      setAlerts([]); // 🔥 prevent stale UI
+
+      if (!isMountedRef.current) return;
+
+      setAlerts([]);
       setError(err instanceof Error ? err.message : "Failed to load alerts.");
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
+    isMountedRef.current = true;
     void refetch();
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, [refetch]);
 
   return { alerts, loading, error, refetch };

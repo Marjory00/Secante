@@ -7,37 +7,57 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ value, severity }: StatusBadgeProps) {
-  const styles =
-    severity === "critical"
-      ? "bg-red-500/10 text-red-300 ring-red-500/20"
-      : severity === "high"
-      ? "bg-orange-500/10 text-orange-300 ring-orange-500/20"
-      : severity === "medium"
-      ? "bg-yellow-500/10 text-yellow-300 ring-yellow-500/20"
-      : severity === "low"
-      ? "bg-emerald-500/10 text-emerald-300 ring-emerald-500/20"
-      : "bg-slate-500/10 text-slate-300 ring-slate-500/20";
+  const severityMap: Record<
+    AlertSeverity | "default",
+    { bg: string; text: string; ring: string; dot: string }
+  > = {
+    critical: {
+      bg: "bg-red-500/10",
+      text: "text-red-300",
+      ring: "ring-red-500/20",
+      dot: "text-red-400",
+    },
+    high: {
+      bg: "bg-orange-500/10",
+      text: "text-orange-300",
+      ring: "ring-orange-500/20",
+      dot: "text-orange-400",
+    },
+    medium: {
+      bg: "bg-yellow-500/10",
+      text: "text-yellow-300",
+      ring: "ring-yellow-500/20",
+      dot: "text-yellow-400",
+    },
+    low: {
+      bg: "bg-emerald-500/10",
+      text: "text-emerald-300",
+      ring: "ring-emerald-500/20",
+      dot: "text-emerald-400",
+    },
+    default: {
+      bg: "bg-slate-500/10",
+      text: "text-slate-300",
+      ring: "ring-slate-500/20",
+      dot: "text-slate-400",
+    },
+  };
 
-  const dotColor =
-    severity === "critical"
-      ? "text-red-400"
-      : severity === "high"
-      ? "text-orange-400"
-      : severity === "medium"
-      ? "text-yellow-400"
-      : severity === "low"
-      ? "text-emerald-400"
-      : "text-slate-400";
+  const current = severityMap[severity ?? "default"];
 
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 backdrop-blur ${styles}`}
+      role="status"
+      aria-label={`Status: ${value}`}
+      className={`inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 backdrop-blur ${current.bg} ${current.text} ${current.ring}`}
     >
       {/* STATUS DOT */}
-      <Circle className={`h-2.5 w-2.5 fill-current ${dotColor}`} />
+      <Circle
+        className={`h-2.5 w-2.5 shrink-0 fill-current ${current.dot}`}
+      />
 
       {/* LABEL */}
-      <span className="capitalize">{value}</span>
+      <span className="truncate capitalize">{value ?? "unknown"}</span>
     </span>
   );
 }

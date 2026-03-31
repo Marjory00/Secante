@@ -9,10 +9,10 @@ export default function App() {
   return (
     <AppShell>
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/cameras" element={<CamerasPage />} />
-        <Route path="/alerts" element={<AlertsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route index element={<DashboardPage />} />
+        <Route path="cameras" element={<CamerasPage />} />
+        <Route path="alerts" element={<AlertsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppShell>

@@ -1,5 +1,4 @@
 import { Play, Signal, Wrench } from "lucide-react";
-import { useMemo } from "react";
 import { useCameras } from "../hooks/useCameras";
 import type { CameraStatus } from "../types/auth";
 import PanelCard from "../components/ui/PanelCard";
@@ -7,7 +6,9 @@ import StatusBadge from "../components/ui/StatusBadge";
 import LoadingState from "../components/ui/LoadingState";
 import EmptyState from "../components/ui/EmptyState";
 
-function getOverlayStatusDot(status: CameraStatus): "online" | "offline" | "warning" {
+function getOverlayStatusDot(
+  status: CameraStatus,
+): "online" | "offline" | "warning" {
   if (status === "maintenance" || status === "degraded") {
     return "warning";
   }
@@ -22,7 +23,7 @@ function getOverlayStatusDot(status: CameraStatus): "online" | "offline" | "warn
 export default function CamerasPage() {
   const { cameras, loading, error, refetch } = useCameras();
 
-  const hasCameras = useMemo(() => cameras.length > 0, [cameras]);
+  const hasCameras = cameras?.length > 0;
 
   return (
     <div className="space-y-6">
@@ -44,7 +45,7 @@ export default function CamerasPage() {
             {cameras.map((camera) => (
               <article
                 key={camera.id}
-                className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/30 shadow-[0_20px_50px_rgba(2,6,23,0.35)]"
+                className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/30 shadow-[0_20px_50px_rgba(2,6,23,0.35)] transition hover:border-white/15 hover:bg-slate-900/40"
               >
                 <div className="feed-frame relative aspect-video bg-slate-900">
                   <img
@@ -63,7 +64,7 @@ export default function CamerasPage() {
 
                   <div className="feed-overlay" />
 
-                  <div className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-md">
+                  <div className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-md">
                     <span
                       className={`status-dot ${getOverlayStatusDot(camera.status)}`}
                       aria-hidden="true"
@@ -72,9 +73,13 @@ export default function CamerasPage() {
                   </div>
 
                   <div className="absolute inset-0 z-10 flex items-center justify-center">
-                    <div className="rounded-full border border-white/10 bg-slate-950/70 p-4 text-slate-100 shadow-lg backdrop-blur-md">
+                    <button
+                      type="button"
+                      className="rounded-full border border-white/10 bg-slate-950/70 p-4 text-slate-100 shadow-lg backdrop-blur-md transition hover:bg-slate-900/80"
+                      aria-label={`Open feed for ${camera.name}`}
+                    >
                       <Play className="h-8 w-8 text-blue-400" />
-                    </div>
+                    </button>
                   </div>
 
                   <div className="feed-label">{camera.streamLabel}</div>
@@ -86,10 +91,14 @@ export default function CamerasPage() {
                       <h3 className="truncate text-base font-semibold text-white">
                         {camera.name}
                       </h3>
-                      <p className="mt-1 text-sm text-slate-400">{camera.location}</p>
+                      <p className="mt-1 text-sm text-slate-400">
+                        {camera.location}
+                      </p>
                     </div>
 
-                    <StatusBadge value={camera.status} />
+                    <div className="shrink-0">
+                      <StatusBadge value={camera.status} />
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2">
@@ -119,7 +128,7 @@ export default function CamerasPage() {
       </PanelCard>
 
       {!loading && error ? (
-        <div className="flex justify-end">
+        <div className="flex justify-start sm:justify-end">
           <button
             type="button"
             onClick={() => void refetch()}
