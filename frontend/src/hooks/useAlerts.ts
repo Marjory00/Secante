@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchAlerts } from "../services/alertService";
 import type { AlertItem } from "../types/auth";
 
@@ -14,22 +14,25 @@ export function useAlerts(): UseAlertsResult {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  async function refetch(): Promise<void> {
+  const refetch = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
       setError(null);
+
       const data = await fetchAlerts();
       setAlerts(data);
     } catch (err) {
+      console.error("Failed to load alerts:", err);
+      setAlerts([]); // 🔥 prevent stale UI
       setError(err instanceof Error ? err.message : "Failed to load alerts.");
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     void refetch();
-  }, []);
+  }, [refetch]);
 
   return { alerts, loading, error, refetch };
 }

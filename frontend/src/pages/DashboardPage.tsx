@@ -1,117 +1,243 @@
-import { Activity, ArrowUpRight, ShieldAlert, Video } from "lucide-react";
-import { metrics } from "../data/mockData";
-import { useAlerts } from "../hooks/useAlerts";
+import { Activity, AlertTriangle, Camera, ShieldCheck } from "lucide-react";
+import { useMemo } from "react";
 import { useCameras } from "../hooks/useCameras";
-import RecentAlertsTable from "../components/tables/RecentAlertsTable";
+import { useAlerts } from "../hooks/useAlerts";
 import PanelCard from "../components/ui/PanelCard";
-import StatCard from "../components/ui/StatCard";
 import StatusBadge from "../components/ui/StatusBadge";
 import LoadingState from "../components/ui/LoadingState";
 import EmptyState from "../components/ui/EmptyState";
 
-export default function DashboardPage() {
-  const {
-    alerts,
-    loading: alertsLoading,
-    error: alertsError
-  } = useAlerts();
+function getOverlayStatusDot(status: string) {
+  if (status === "maintenance" || status === "degraded") {
+    return "warning";
+  }
 
+  if (status === "offline") {
+    return "offline";
+  }
+
+  return "online";
+}
+
+export default function DashboardPage() {
   const {
     cameras,
     loading: camerasLoading,
-    error: camerasError
+    error: camerasError,
   } = useCameras();
+
+  const {
+    alerts,
+    loading: alertsLoading,
+    error: alertsError,
+  } = useAlerts();
+
+  const stats = useMemo(() => {
+    const totalCameras = cameras.length;
+    const onlineCameras = cameras.filter((camera) => camera.status === "online").length;
+    const offlineCameras = cameras.filter((camera) => camera.status === "offline").length;
+    const attentionCameras = cameras.filter(
+      (camera) => camera.status === "maintenance" || camera.status === "degraded"
+    ).length;
+
+    const openAlerts = alerts.filter(
+      (alert) => alert.status === "open" || alert.status === "investigating"
+    ).length;
+
+    const criticalAlerts = alerts.filter(
+      (alert) => alert.severity === "critical" || alert.severity === "high"
+    ).length;
+
+    const systemHealth =
+      totalCameras > 0
+        ? Math.round((onlineCameras / totalCameras) * 100)
+        : 0;
+
+    return {
+      totalCameras,
+      onlineCameras,
+      offlineCameras,
+      attentionCameras,
+      openAlerts,
+      criticalAlerts,
+      systemHealth,
+    };
+  }, [alerts, cameras]);
+
+  const previewCameras = cameras.slice(0, 4);
+  const recentAlerts = alerts.slice(0, 5);
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[28px] border border-white/10 bg-linear-to-br from-blue-600/20 via-slate-900/40 to-slate-900/50 p-6 shadow-2xl shadow-blue-950/20">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-blue-300/80">
-              Live overview
-            </p>
-            <h2 className="mt-2 text-3xl font-semibold text-white">
-              Monitor sites, alerts, and camera health in one place
-            </h2>
-            <p className="mt-3 max-w-2xl text-slate-300">
-              Real-time event monitoring for facilities, entrances, internal zones,
-              and operational response teams.
-            </p>
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article className="glass-panel p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-2xl bg-blue-500/15 p-3 text-blue-400">
+              <AlertTriangle className="h-5 w-5" />
+            </span>
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              Alerts
+            </span>
           </div>
+          <p className="text-3xl font-bold text-white">{stats.openAlerts}</p>
+          <p className="mt-2 text-sm text-slate-400">
+            {stats.criticalAlerts} high-priority incidents
+          </p>
+        </article>
 
-          <button className="inline-flex items-center gap-2 rounded-2xl bg-blue-500 px-5 py-3 font-medium text-white transition hover:bg-blue-400">
-            View incident queue
-            <ArrowUpRight className="h-4 w-4" />
-          </button>
-        </div>
+        <article className="glass-panel p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-2xl bg-emerald-500/15 p-3 text-emerald-400">
+              <Camera className="h-5 w-5" />
+            </span>
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              Cameras
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-white">
+            {stats.onlineCameras} / {stats.totalCameras || 0}
+          </p>
+          <p className="mt-2 text-sm text-slate-400">
+            {stats.offlineCameras} offline · {stats.attentionCameras} need attention
+          </p>
+        </article>
+
+        <article className="glass-panel p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-2xl bg-amber-500/15 p-3 text-amber-400">
+              <Activity className="h-5 w-5" />
+            </span>
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              Health
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-white">{stats.systemHealth}%</p>
+          <p className="mt-2 text-sm text-slate-400">
+            Live network camera availability
+          </p>
+        </article>
+
+        <article className="glass-panel p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <span className="rounded-2xl bg-cyan-500/15 p-3 text-cyan-400">
+              <ShieldCheck className="h-5 w-5" />
+            </span>
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              Coverage
+            </span>
+          </div>
+          <p className="text-3xl font-bold text-white">
+            {stats.totalCameras > 0 ? "Active" : "N/A"}
+          </p>
+          <p className="mt-2 text-sm text-slate-400">
+            Monitoring perimeter and interior zones
+          </p>
+        </article>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {metrics.map((item) => (
-          <StatCard
-            key={item.label}
-            label={item.label}
-            value={item.value}
-            helper={item.helper}
-          />
-        ))}
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
+      <section className="grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
         <PanelCard
-          title="Recent Alerts"
-          subtitle="Most recent activity requiring review or follow-up"
-          action={
-            <div className="inline-flex items-center gap-2 rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-300 ring-1 ring-red-400/20">
-              <ShieldAlert className="h-3.5 w-3.5" />
-              Priority queue
-            </div>
-          }
+          title="Camera Overview"
+          subtitle="Priority camera feeds from monitored zones"
         >
-          {alertsLoading ? (
-            <LoadingState label="Loading alerts..." />
-          ) : alertsError ? (
-            <EmptyState title="Alerts unavailable" message={alertsError} />
+          {camerasLoading ? (
+            <LoadingState label="Loading dashboard cameras..." />
+          ) : camerasError ? (
+            <EmptyState title="Unable to load cameras" message={camerasError} />
+          ) : previewCameras.length === 0 ? (
+            <EmptyState
+              title="No camera previews"
+              message="Camera preview feeds are not available yet."
+            />
           ) : (
-            <RecentAlertsTable alerts={alerts} />
+            <div className="grid gap-4 md:grid-cols-2">
+              {previewCameras.map((camera) => (
+                <article
+                  key={camera.id}
+                  className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/30"
+                >
+                  <div className="feed-frame relative aspect-video bg-slate-900">
+                    <img
+                      src={camera.image}
+                      alt={`${camera.name} preview`}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      onError={(event) => {
+                        const target = event.currentTarget;
+                        if (!target.dataset.fallbackApplied) {
+                          target.dataset.fallbackApplied = "true";
+                          target.src = "/favicon.svg";
+                        }
+                      }}
+                    />
+
+                    <div className="feed-overlay" />
+
+                    <div className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-md">
+                      <span
+                        className={`status-dot ${getOverlayStatusDot(camera.status)}`}
+                        aria-hidden="true"
+                      />
+                      <span className="capitalize">{camera.status}</span>
+                    </div>
+
+                    <div className="feed-label">{camera.streamLabel}</div>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-4 p-4">
+                    <div className="min-w-0">
+                      <h3 className="truncate text-base font-semibold text-white">
+                        {camera.name}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-400">{camera.location}</p>
+                    </div>
+                    <StatusBadge value={camera.status} />
+                  </div>
+                </article>
+              ))}
+            </div>
           )}
         </PanelCard>
 
         <PanelCard
-          title="Camera Health"
-          subtitle="Quick visibility into stream status"
-          action={
-            <div className="inline-flex items-center gap-2 text-sm text-slate-400">
-              <Video className="h-4 w-4" />
-              {cameras.length} feeds
-            </div>
-          }
+          title="Recent Alerts"
+          subtitle="Latest security events across monitored locations"
         >
-          {camerasLoading ? (
-            <LoadingState label="Loading cameras..." />
-          ) : camerasError ? (
-            <EmptyState title="Cameras unavailable" message={camerasError} />
-          ) : !cameras.length ? (
+          {alertsLoading ? (
+            <LoadingState label="Loading recent alerts..." />
+          ) : alertsError ? (
+            <EmptyState title="Unable to load alerts" message={alertsError} />
+          ) : recentAlerts.length === 0 ? (
             <EmptyState
-              title="No cameras found"
-              message="No cameras are currently available."
+              title="No alerts found"
+              message="Recent incident activity will appear here."
             />
           ) : (
             <div className="space-y-3">
-              {cameras.map((camera) => (
-                <div
-                  key={camera.id}
-                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-950/30 p-4"
+              {recentAlerts.map((alert) => (
+                <article
+                  key={alert.id}
+                  className="rounded-2xl border border-white/10 bg-slate-950/30 p-4"
                 >
-                  <div>
-                    <p className="font-medium text-white">{camera.name}</p>
-                    <p className="text-sm text-slate-400">{camera.location}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <h3 className="truncate font-medium text-white">
+                        {alert.title}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-400">
+                        {alert.location}
+                      </p>
+                    </div>
+                    <StatusBadge value={alert.status} />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Activity className="h-4 w-4 text-blue-400" />
-                    <StatusBadge value={camera.status} />
+
+                  <div className="mt-3 flex items-center justify-between gap-3 text-sm">
+                    <span className="capitalize text-slate-300">
+                      Severity: {alert.severity}
+                    </span>
+                    <span className="text-slate-500">{alert.time}</span>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           )}
