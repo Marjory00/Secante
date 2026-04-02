@@ -68,12 +68,6 @@ textarea {
   font: inherit;
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
 button:disabled,
 input:disabled,
 select:disabled,
@@ -96,18 +90,12 @@ canvas {
   height: auto;
 }
 
+/* Only set text color globally for form controls.
+   Do not force background/border on every input/button because that overrides Tailwind utilities. */
 input,
 select,
 textarea {
   color: var(--text);
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid var(--border);
-  outline: none;
-  border-radius: 12px;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
 }
 
 input::placeholder,
@@ -115,9 +103,20 @@ textarea::placeholder {
   color: var(--text-muted);
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+/* Optional shared form field class instead of global override */
+.field-control {
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.field-control:focus {
   border-color: rgba(59, 130, 246, 0.55);
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
@@ -204,6 +203,7 @@ textarea:focus {
   gap: 10px;
   min-height: 44px;
   padding: 0 16px;
+  border: none;
   border-radius: 14px;
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: #ffffff;
@@ -227,7 +227,8 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+.field-control:focus-visible {
   outline: 2px solid rgba(59, 130, 246, 0.75);
   outline-offset: 3px;
 }
