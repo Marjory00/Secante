@@ -426,7 +426,7 @@ export default function AlertsPage() {
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 xl:w-[250px] xl:flex-col">
+                      <div className="flex flex-wrap gap-2 xl:w-62.5 xl:flex-col">
                         <button
                           type="button"
                           className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
